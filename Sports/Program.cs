@@ -31,14 +31,47 @@ class Program
     {
         //displaySports();
         //AddSport();
-        //AddTournament();
+        AddTournament();
         //removeSport();
-        removeTournament();
-
+        //removeTournament();
+        enterScoreboard();
 
 
 
     }
+
+    public static void enterScoreboard()
+    {
+        Console.Write("Enter tournament ID:");
+        int tournament_id = int.Parse(Console.ReadLine());
+        Console.Write("Enter Sport ID:");
+        int sport_id = int.Parse(Console.ReadLine());
+        Console.Write("Which team won");
+        string wonTeam= Console.ReadLine();
+        string TeamA = "";
+        string TeamB = "";
+        if(wonTeam == "Team_A")
+        {
+            TeamA = "won";
+            TeamB = "lose";
+        }
+        else
+        {
+            TeamA = "lose";
+            TeamB = "won";
+        }
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query = $"INSERT INTO scoreboard VALUES ({tournament_id},{sport_id},'{TeamA}','{TeamB}')";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
+    }
+
 
     public static void removeTournament()
     {
