@@ -32,10 +32,35 @@ class Program
         //displaySports();
         //AddSport();
         //AddTournament();
-        removeSport();
+        //removeSport();
+        removeTournament();
 
-        
+
+
+
     }
+
+    public static void removeTournament()
+    {
+        Console.Write("Tournament ID to be removed from the system : ");
+        int TournamentID = int.Parse(Console.ReadLine());
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query1 = $"DELETE FROM League WHERE T_Id={TournamentID}";
+            using (SqlCommand command1 = new SqlCommand(query1, connection))
+            {
+                command1.ExecuteNonQuery();
+            }
+            string query2 = $"DELETE FROM Tournament WHERE T_Id={TournamentID}";
+            using (SqlCommand command2 = new SqlCommand(query2, connection))
+            {
+                command2.ExecuteNonQuery();
+            }
+        }
+    }
+
 
     public static void removeSport()
     {
