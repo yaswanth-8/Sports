@@ -64,14 +64,56 @@ class Program
         getInitialDetails();
         //displaySports();
         //AddSport();
-        AddTournament();
+        //AddTournament();
         //removeSport();
         //removeTournament();
         //enterScoreboard();
         //getInitialDetails();
+        //displayResults();
+        removePlayer();
 
 
     }
+    public static void removePlayer()
+    {
+        Console.Write("Team Name to be removed from the system : ");
+        string Team = Console.ReadLine();
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query1 = $"DELETE FROM scoreboard WHERE A_Name='{Team}' OR B_Name='{Team}'";
+            using (SqlCommand command1 = new SqlCommand(query1, connection))
+            {
+                command1.ExecuteNonQuery();
+            }
+        }
+    }
+    public static void displayResults()
+    {
+        Console.Write("Enter tournament id: ");
+        int TournamentID = int.Parse(Console.ReadLine());
+        Console.Write("Enter Sport id: ");
+        int sportID = int.Parse(Console.ReadLine());
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query = $"SELECT M_Id,Team_A,Team_B,A_Name,B_Name FROM scoreboard WHERE T_Id={TournamentID} AND S_Id={sportID}";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(reader[0] + "             " + reader[3]+" - " + reader[1] +"          " + reader[4]+" - " + reader[2]);
+                    }
+                }
+            }
+        }
+    }
+
+
 
     public static void enterScoreboard()
     {
@@ -79,11 +121,14 @@ class Program
         int tournament_id = int.Parse(Console.ReadLine());
         Console.Write("Enter Sport ID:");
         int sport_id = int.Parse(Console.ReadLine());
-        Console.Write("Which team won");
+        Console.WriteLine("Enter Team A name and Team B name :");
+        string A_Name= Console.ReadLine();
+        string B_Name = Console.ReadLine();
+        Console.Write("Which team won : ");
         string wonTeam= Console.ReadLine();
         string TeamA = "";
         string TeamB = "";
-        if(wonTeam == "Team_A")
+        if(wonTeam == A_Name)
         {
             TeamA = "won";
             TeamB = "lose";
@@ -97,7 +142,7 @@ class Program
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            string query = $"INSERT INTO scoreboard VALUES ({tournament_id},{sport_id},'{TeamA}','{TeamB}')";
+            string query = $"INSERT INTO scoreboard VALUES ({tournament_id},{sport_id},'{TeamA}','{TeamB}','{A_Name}','{B_Name}')";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.ExecuteNonQuery();
@@ -116,6 +161,11 @@ class Program
             connection.Open();
             string query1 = $"DELETE FROM League WHERE T_Id={TournamentID}";
             using (SqlCommand command1 = new SqlCommand(query1, connection))
+            {
+                command1.ExecuteNonQuery();
+            }
+            string query3 = $"DELETE FROM scoreboard WHERE T_Id={TournamentID}";
+            using (SqlCommand command1 = new SqlCommand(query3, connection))
             {
                 command1.ExecuteNonQuery();
             }
@@ -139,6 +189,11 @@ class Program
             connection.Open();
             string query1 = $"DELETE FROM League WHERE S_Id={sportId}";
             using (SqlCommand command1 = new SqlCommand(query1, connection))
+            {
+                command1.ExecuteNonQuery();
+            }
+            string query3 = $"DELETE FROM scoreboard WHERE S_Id={sportId}";
+            using (SqlCommand command1 = new SqlCommand(query3, connection))
             {
                 command1.ExecuteNonQuery();
             }
