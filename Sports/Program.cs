@@ -30,9 +30,33 @@ class Program
     static void Main(string[] args)
     {
         //displaySports();
-        AddSport();
-        AddTournament();
+        //AddSport();
+        //AddTournament();
+        removeSport();
+
         
+    }
+
+    public static void removeSport()
+    {
+        displaySports();
+        Console.Write("Choose the sport ID to be removed from the system : ");
+        int sportId = int.Parse(Console.ReadLine());
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query1 = $"DELETE FROM League WHERE S_Id={sportId}";
+            using (SqlCommand command1 = new SqlCommand(query1, connection))
+            {
+                command1.ExecuteNonQuery();
+            }
+            string query2 = $"DELETE FROM Sports WHERE S_Id={sportId}";
+            using (SqlCommand command2 = new SqlCommand(query2, connection))
+            {
+                command2.ExecuteNonQuery();
+            }
+        }
     }
 
     public static void AddTournament()
@@ -47,7 +71,7 @@ class Program
             string query = $"INSERT INTO Tournament (T_Id, T_Name) VALUES ({T_Id++}, '{T_Name}');";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-                command.ExecuteReader();
+                command.ExecuteNonQuery();
             }
         }
     }
@@ -67,7 +91,7 @@ class Program
                 string query = $"INSERT INTO League (T_Id, S_Id) VALUES ({T_Id}, {sportId});";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.ExecuteReader();
+                    command.ExecuteNonQuery();
                 }
             }
             Console.WriteLine("Do you want to add more sport to tournament :");
@@ -88,7 +112,7 @@ class Program
             string query = $"INSERT INTO Sports (S_Id, S_Name) VALUES ({S_Id++}, '{S_Name}');";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-                command.ExecuteReader();
+                command.ExecuteNonQuery();
             }
         }
     }
