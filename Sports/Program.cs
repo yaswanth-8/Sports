@@ -6,8 +6,8 @@ using System.Xml.Linq;
 namespace MyProject;
 class Program
 {
-    public static int S_Id = 2;
-    public static int T_Id = 1;
+    public static int S_Id = 0;
+    public static int T_Id = 0;
     public static void displaySports()
     {
         string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
@@ -27,15 +27,48 @@ class Program
             }
         }
     }
+
+    public static void getInitialDetails()
+    {
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query = $"SELECT COUNT(*) FROM Sports;";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        S_Id = reader.GetInt32(0);
+                    }
+                }
+            }
+            string query1 = $"SELECT COUNT(*) FROM Tournament;";
+            using (SqlCommand command = new SqlCommand(query1, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        T_Id = reader.GetInt32(0);
+                    }
+                }
+            }
+        }
+    }
+
     static void Main(string[] args)
     {
+        getInitialDetails();
         //displaySports();
         //AddSport();
         AddTournament();
         //removeSport();
         //removeTournament();
-        enterScoreboard();
-
+        //enterScoreboard();
+        //getInitialDetails();
 
 
     }
@@ -126,7 +159,7 @@ class Program
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            string query = $"INSERT INTO Tournament (T_Id, T_Name) VALUES ({T_Id++}, '{T_Name}');";
+            string query = $"INSERT INTO Tournament (T_Id, T_Name) VALUES ({T_Id+1}, '{T_Name}');";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.ExecuteNonQuery();
@@ -146,7 +179,7 @@ class Program
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string query = $"INSERT INTO League (T_Id, S_Id) VALUES ({T_Id}, {sportId});";
+                string query = $"INSERT INTO League (T_Id, S_Id) VALUES ({T_Id+1}, {sportId});";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.ExecuteNonQuery();
@@ -167,7 +200,7 @@ class Program
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            string query = $"INSERT INTO Sports (S_Id, S_Name) VALUES ({S_Id++}, '{S_Name}');";
+            string query = $"INSERT INTO Sports (S_Id, S_Name) VALUES ({S_Id+1}, '{S_Name}');";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.ExecuteNonQuery();
