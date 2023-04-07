@@ -70,9 +70,49 @@ class Program
         //enterScoreboard();
         //getInitialDetails();
         //displayResults();
-        removePlayer();
+        displayIndividualResults();
+        //removePlayer();
+        //registerIndividual();
 
+    }
 
+    public static void displayIndividualResults()
+    {
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query = $"SELECT StudentName,Score FROM Students";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Console.WriteLine(reader[0] + "             " + reader[1] );
+                    }
+                }
+            }
+        }
+    }
+    public static void registerIndividual()
+    {
+        Console.Write("Student Name : ");
+        string Name = Console.ReadLine();
+        Console.Write("Tounament Id : ");
+        string Tid = Console.ReadLine();
+        Console.Write("Sport Id : ");
+        string Sid = Console.ReadLine();
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query1 = $"INSERT INTO STUDENTS(StudentName,T_Id,S_Id) VALUES ('{Name}',{Tid},{Sid})";
+            using (SqlCommand command1 = new SqlCommand(query1, connection))
+            {
+                command1.ExecuteNonQuery();
+            }
+        }
     }
     public static void removePlayer()
     {
@@ -128,17 +168,36 @@ class Program
         string wonTeam= Console.ReadLine();
         string TeamA = "";
         string TeamB = "";
-        if(wonTeam == A_Name)
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        if (wonTeam == A_Name)
         {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query1 = $"UPDATE Students SET Score = Score + 1 WHERE StudentName='{A_Name}'";
+                using (SqlCommand command = new SqlCommand(query1, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
             TeamA = "won";
             TeamB = "lose";
         }
         else
         {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query1 = $"UPDATE Students SET Score = Score + 1 WHERE StudentName='{B_Name}'";
+                using (SqlCommand command = new SqlCommand(query1, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
             TeamA = "lose";
             TeamB = "won";
         }
-        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
             connection.Open();
