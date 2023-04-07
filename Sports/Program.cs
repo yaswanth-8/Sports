@@ -8,6 +8,8 @@ class Program
 {
     public static int S_Id = 0;
     public static int T_Id = 0;
+
+    //Display Sports Present
     public static void displaySports()
     {
         string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
@@ -28,6 +30,7 @@ class Program
         }
     }
 
+    //Initial Preparation 
     public static void getInitialDetails()
     {
         string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
@@ -59,6 +62,7 @@ class Program
         }
     }
 
+    //Main Method
     static void Main(string[] args)
     {
         getInitialDetails();
@@ -69,13 +73,14 @@ class Program
         //removeTournament();
         //enterScoreboard();
         //getInitialDetails();
-        //displayResults();
+        //displayResultistory();
         displayIndividualResults();
         //removePlayer();
         //registerIndividual();
 
     }
 
+    //Display Stuednts and their scores
     public static void displayIndividualResults()
     {
         string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
@@ -95,6 +100,9 @@ class Program
             }
         }
     }
+
+
+    //Registeration of Individual
     public static void registerIndividual()
     {
         Console.Write("Student Name : ");
@@ -114,22 +122,31 @@ class Program
             }
         }
     }
+
+    //Remove Player
     public static void removePlayer()
     {
         Console.Write("Team Name to be removed from the system : ");
-        string Team = Console.ReadLine();
+        string name = Console.ReadLine();
         string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
             connection.Open();
-            string query1 = $"DELETE FROM scoreboard WHERE A_Name='{Team}' OR B_Name='{Team}'";
+            string query = $"DELETE FROM Students WHERE StudentName='{name}'";
+            using (SqlCommand command1 = new SqlCommand(query, connection))
+            {
+                command1.ExecuteNonQuery();
+            }
+            string query1 = $"DELETE FROM scoreboard WHERE A_Name='{name}' OR B_Name='{name}'";
             using (SqlCommand command1 = new SqlCommand(query1, connection))
             {
                 command1.ExecuteNonQuery();
             }
         }
     }
-    public static void displayResults()
+
+    //Display Match History
+    public static void displayResultistory()
     {
         Console.Write("Enter tournament id: ");
         int TournamentID = int.Parse(Console.ReadLine());
@@ -154,7 +171,7 @@ class Program
     }
 
 
-
+    //Entering Scorecard details
     public static void enterScoreboard()
     {
         Console.Write("Enter tournament ID:");
@@ -209,7 +226,7 @@ class Program
         }
     }
 
-
+    //Remove Tournament From the system
     public static void removeTournament()
     {
         Console.Write("Tournament ID to be removed from the system : ");
@@ -236,7 +253,7 @@ class Program
         }
     }
 
-
+    //Remove Sport from the system
     public static void removeSport()
     {
         displaySports();
@@ -264,6 +281,7 @@ class Program
         }
     }
 
+    //Add Tournament to the system
     public static void AddTournament()
     {
         Console.Write("Enter the Tournament Name to be added : ");
@@ -281,6 +299,7 @@ class Program
         }
     }
 
+    //Adding sport to the Tournament while tournament initialization
     public static void AddSportToTournament()
     {
         bool itr = true;
@@ -306,6 +325,7 @@ class Program
 
         }
 
+    //Adding sport to the student
     public static void AddSport()
     {
         Console.Write("Enter the Sport Name to be added : ");
