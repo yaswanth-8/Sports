@@ -1,10 +1,13 @@
 ﻿
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Xml.Linq;
 
 namespace MyProject;
 class Program
 {
+    public static int S_Id = 2;
+    public static int T_Id = 1;
     public static void displaySports()
     {
         string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
@@ -26,6 +29,67 @@ class Program
     }
     static void Main(string[] args)
     {
-        displaySports();
+        //displaySports();
+        AddSport();
+        AddTournament();
+        
+    }
+
+    public static void AddTournament()
+    {
+        Console.Write("Enter the Tournament Name to be added : ");
+        String T_Name = Console.ReadLine();
+        AddSportToTournament();
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query = $"INSERT INTO Tournament (T_Id, T_Name) VALUES ({T_Id++}, '{T_Name}');";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.ExecuteReader();
+            }
+        }
+    }
+
+    public static void AddSportToTournament()
+    {
+        bool itr = true;
+        while (itr)
+        {
+            displaySports();
+            Console.Write("Choose the sport ID to be added to the tournament : ");
+            int sportId = int.Parse(Console.ReadLine());
+            string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string query = $"INSERT INTO League (T_Id, S_Id) VALUES ({T_Id}, {sportId});";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.ExecuteReader();
+                }
+            }
+            Console.WriteLine("Do you want to add more sport to tournament :");
+            string answer = Console.ReadLine();
+            if (answer == "yes") { itr = true; }else itr = false;
+            }
+
+        }
+
+    public static void AddSport()
+    {
+        Console.Write("Enter the Sport Name to be added : ");
+        String S_Name=Console.ReadLine();
+        string connectionString = "Data Source=DESKTOP-A1NJHOG;Initial Catalog=Sports;Integrated Security=True;Encrypt=False;";
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+            string query = $"INSERT INTO Sports (S_Id, S_Name) VALUES ({S_Id++}, '{S_Name}');";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.ExecuteReader();
+            }
+        }
     }
 }
